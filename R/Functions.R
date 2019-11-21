@@ -1,16 +1,29 @@
 id <- "6ccbb5c4-fa22-45dc-ad57-74c29cc8b3d6"
 
 #' @importFrom magrittr %>%
-loadTable <- function(id, tableName = NULL) {
+loadTable <- function(id, tableName = NULL, con) {
   if (is.null(tableName))
   {
-    jsonlite::fromJSON(paste0("http://i885981core.venus.fhict.nl/json/", id)) %>% 
-      dplyr::mutate_at(dplyr::vars(dplyr::ends_with("date", ignore.case = TRUE)), lubridate::as_datetime)
+    tableName <- "joinAll"
+    json <- jsonlite::fromJSON(paste0("http://i885981core.venus.fhict.nl/json/", id))
   }
   else {
-    jsonlite::fromJSON(paste0("http://i885981core.venus.fhict.nl/table/", tableName, "/", id)) %>% 
-      dplyr::mutate_at(dplyr::vars(dplyr::ends_with("date", ignore.case = TRUE)), lubridate::as_datetime)
+    json <-jsonlite::fromJSON(paste0("http://i885981core.venus.fhict.nl/table/", tableName, "/", id))
   }
+  
+  df <- json %>% dplyr::mutate_at(dplyr::vars(dplyr::ends_with("date", ignore.case = TRUE)), lubridate::as_datetime)
+  tbl <- json %>% dplyr::mutate_at(dplyr::vars(dplyr::ends_with("date", ignore.case = TRUE)), as.character)
+  
+  #TODO: Use singular instead of plural table names
+  #last.lets <- substr(word,nchar(word),nchar(word))
+  # if(last.lets == "s")
+  # {
+  #   #remove 's'
+  #   word <- substr(word,1,nchar(word)-1)
+  # }
+  
+  assign(tolower(tableName), df, envir = sys.frame())
+  dplyr::copy_to(con, tbl, tableName)
 }
 
 
@@ -25,13 +38,11 @@ loadAllTables <- function(id = NULL)
   tables <- c("Customers", "Employees", "Orders", "OrderLines", "Products", "ProductCategories", "ProductPrices", "SalesRegions", "Stock")
   
   for (i in 1:length(tables)){
-    assign(tolower(tables[i]), loadTable(id, tables[i]), envir = parent.frame())
-    dplyr::copy_to(con, get(tolower(tables[i])), tolower(tables[i]))
+    loadTable(id, tables[i], con)
   }
   
-  # JoinThemAll
-  assign("joinAll", loadTable(id), envir = parent.frame())
-  dplyr::copy_to(con, get("joinAll"), "joinAll")
+  # Load joinAll
+  loadTable(id, tableName = NULL, con)
   
   con
 }

@@ -1,6 +1,6 @@
 Package: sim
 Title: sim 
-Version: 0.1
+Version: 0.2
 Authors@R: person("J.F.", "van der Straten", email = "j.vanderstraten@fontys.nl",
   role = c("aut", "cre"))
 Description: Small R utility package for first semester students @ FHICT 
@@ -11,5 +11,6 @@ Imports:
   tidyverse,
   magrittr,
   lubridate,
+  RSQLite,
   jsonlite
 RoxygenNote: 6.1.1

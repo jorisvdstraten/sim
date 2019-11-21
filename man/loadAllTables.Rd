@@ -4,7 +4,7 @@
 \alias{loadAllTables}
 \title{loads all tables}
 \usage{
-loadAllTables()
+loadAllTables(id = NULL)
 }
 \description{
 loads all tables

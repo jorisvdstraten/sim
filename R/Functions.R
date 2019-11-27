@@ -13,11 +13,13 @@ loadTable <- function(id, tableName = NULL, con) {
   
   df <- json %>% dplyr::mutate_at(dplyr::vars(dplyr::ends_with("date", ignore.case = TRUE)), lubridate::as_datetime)
   tbl <- json %>% 
-    dplyr::mutate_at(dplyr::vars(dplyr::ends_with("date", ignore.case = TRUE)), as.character)
+    dplyr::mutate_at(dplyr::vars(dplyr::ends_with("date", ignore.case = TRUE)), as.character) %>% 
+    dplyr::mutate_at(dplyr::vars(dplyr::ends_with("date", ignore.case = TRUE)), list(monthNr = ~lubridate::month(.), monthName = ~lubridate::month(., label = TRUE), yearNr = ~lubridate::year(.)))
+    #dplyr::mutate_if(lubridate::is.POSIXct, list(monthNr = ~lubridate::month(.), monthName = ~lubridate::month(., label = TRUE), yearNr = ~lubridate::year(.)))
   
   # voor iedere datum kolom de maanden en jaren opsplitsen naar aparte kolommen
   # maand nummers en namen
-  tbl <- tbl %>% mutate_if(lubridate::is.POSIXct, list(monthNr = ~lubridate::month(.), monthName = ~lubridate::month(., label = TRUE), yearNr = ~lubridate::year(.)))
+  #tbl <- tbl %>% mutate_if(lubridate::is.POSIXct, list(monthNr = ~lubridate::month(.), monthName = ~lubridate::month(., label = TRUE), yearNr = ~lubridate::year(.)))
   
   #TODO: Use singular instead of plural table names
   #last.lets <- substr(word,nchar(word),nchar(word))

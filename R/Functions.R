@@ -12,7 +12,12 @@ loadTable <- function(id, tableName = NULL, con) {
   }
   
   df <- json %>% dplyr::mutate_at(dplyr::vars(dplyr::ends_with("date", ignore.case = TRUE)), lubridate::as_datetime)
-  tbl <- json %>% dplyr::mutate_at(dplyr::vars(dplyr::ends_with("date", ignore.case = TRUE)), as.character)
+  tbl <- json %>% 
+    dplyr::mutate_at(dplyr::vars(dplyr::ends_with("date", ignore.case = TRUE)), as.character)
+  
+  # voor iedere datum kolom de maanden en jaren opsplitsen naar aparte kolommen
+  # maand nummers en namen
+  tbl <- tbl %>% mutate_if(lubridate::is.POSIXct, list(monthNr = ~lubridate::month(.), monthName = ~lubridate::month(., label = TRUE), yearNr = ~lubridate::year(.)))
   
   #TODO: Use singular instead of plural table names
   #last.lets <- substr(word,nchar(word),nchar(word))
@@ -23,6 +28,7 @@ loadTable <- function(id, tableName = NULL, con) {
   # }
   
   assign(tolower(tableName), df, envir = sys.frame())
+  
   dplyr::copy_to(con, tbl, tableName)
 }
 

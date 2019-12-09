@@ -1,4 +1,4 @@
-id <- "6ccbb5c4-fa22-45dc-ad57-74c29cc8b3d6"
+id <- "d620197a-5611-c0ab-5a60-135aefe8bc67"
 
 #' @importFrom magrittr %>%
 loadTable <- function(id, tableName = NULL, con) {
@@ -15,11 +15,6 @@ loadTable <- function(id, tableName = NULL, con) {
   tbl <- json %>% 
     dplyr::mutate_at(dplyr::vars(dplyr::ends_with("date", ignore.case = TRUE)), as.character) %>% 
     dplyr::mutate_at(dplyr::vars(dplyr::ends_with("date", ignore.case = TRUE)), list(monthNr = ~lubridate::month(.), monthName = ~lubridate::month(., label = TRUE), yearNr = ~lubridate::year(.)))
-    #dplyr::mutate_if(lubridate::is.POSIXct, list(monthNr = ~lubridate::month(.), monthName = ~lubridate::month(., label = TRUE), yearNr = ~lubridate::year(.)))
-  
-  # voor iedere datum kolom de maanden en jaren opsplitsen naar aparte kolommen
-  # maand nummers en namen
-  #tbl <- tbl %>% mutate_if(lubridate::is.POSIXct, list(monthNr = ~lubridate::month(.), monthName = ~lubridate::month(., label = TRUE), yearNr = ~lubridate::year(.)))
   
   #TODO: Use singular instead of plural table names
   #last.lets <- substr(word,nchar(word),nchar(word))
@@ -38,9 +33,9 @@ loadTable <- function(id, tableName = NULL, con) {
 #' loads all tables
 #' @importFrom magrittr %>%
 #' @export
-loadAllTables <- function(id = NULL)
+loadSimulation <- function(id = NULL)
 {
-  if (is.null(id)) {id <- "6ccbb5c4-fa22-45dc-ad57-74c29cc8b3d6"}
+  if (is.null(id)) {id <- "d620197a-5611-c0ab-5a60-135aefe8bc67"}
   con <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
   
   tables <- c("Customers", "Employees", "Orders", "OrderLines", "Products", "ProductCategories", "ProductPrices", "SalesRegions", "Stock")

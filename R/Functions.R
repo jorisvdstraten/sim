@@ -29,6 +29,13 @@ loadTable <- function(id, tableName = NULL, con) {
   dplyr::copy_to(con, tbl, tableName)
 }
 
+#' list all available simulations
+#' @importFrom magrittr %>%
+#' @export
+listSimulations <- function()
+{
+  jsonlite::fromJSON("http://i885981core.venus.fhict.nl/sims/")
+}
 
 #' loads all tables
 #' @importFrom magrittr %>%

@@ -4,7 +4,7 @@
 \alias{loadSimulation}
 \title{loads all tables}
 \usage{
-loadSimulation(id = NULL)
+loadSimulation(id)
 }
 \description{
 loads all tables

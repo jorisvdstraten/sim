@@ -1,11 +1,13 @@
 Package: sim
-Title: sim 
-Version: 0.2
+Title: Simulation package for FHICT students 
+Version: 0.3
 Authors@R: person("J.F.", "van der Straten", email = "j.vanderstraten@fontys.nl",
   role = c("aut", "cre"))
 Description: Small R utility package for first semester students @ FHICT 
 Depends: R (>= 3.1.0)
 License: NA
+URL: https://github.com/jorisvdstraten/sim
+BugReports: https://github.com/jorisvdstraten/sim/issues
 LazyData: true
 Imports:
   tidyverse,
@@ -13,4 +15,4 @@ Imports:
   lubridate,
   RSQLite,
   jsonlite
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2

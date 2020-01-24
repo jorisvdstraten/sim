@@ -1,4 +1,4 @@
-id <- "d620197a-5611-c0ab-5a60-135aefe8bc67"
+tables <- c("Customers", "Employees", "Orders", "OrderLines", "Products", "ProductCategories", "ProductPrices", "SalesRegions", "Stock")
 
 #' @importFrom magrittr %>%
 loadTable <- function(id, tableName = NULL, con) {
@@ -40,12 +40,10 @@ listSimulations <- function()
 #' loads all tables
 #' @importFrom magrittr %>%
 #' @export
-loadSimulation <- function(id = NULL)
+loadSimulation <- function(id)
 {
   if (is.null(id)) {id <- "d620197a-5611-c0ab-5a60-135aefe8bc67"}
   con <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
-  
-  tables <- c("Customers", "Employees", "Orders", "OrderLines", "Products", "ProductCategories", "ProductPrices", "SalesRegions", "Stock")
   
   for (i in 1:length(tables)){
     loadTable(id, tables[i], con)
@@ -53,6 +51,24 @@ loadSimulation <- function(id = NULL)
   
   # Load joinAll
   loadTable(id, tableName = NULL, con)
+  
+  con
+}
+
+#' loads all tables from default KlantArtikel database
+#' @importFrom magrittr %>%
+#' @export
+loadBasicDatabase <- function()
+{
+  tables <- c("Customers", "Employees", "Orders", "OrderLines", "Products", "ProductCategories", "ProductPrices", "SalesRegions")
+  con <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+  
+  for (i in 1:length(tables)){
+    tableName <- tolower(tables[i])
+    dplyr::copy_to(con, get(tableName), tableName)
+  }
+  
+  dplyr::copy_to(con, MijnTabel, "MijnTabel")
   
   con
 }
